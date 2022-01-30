@@ -4,7 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "*"
+flask = "2.0.2"
+redis = "4.1.2"
 
 [dev-packages]
 pytest = "*"

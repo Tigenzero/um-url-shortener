@@ -1,7 +1,7 @@
 OK="OK ${CNone}"
 ROOT_DIR := $(shell pwd)
 export FLASK_APP=app.short_url
-REDIS_SERVER = "tinyurl"
+REDIS_SERVER = "127.0.0.1"
 REDIS_PORT = "6379"
 
 venv:
@@ -13,10 +13,18 @@ venv:
 
 unit-test: venv
 	export PYTHONPATH=${PYTHONPATH}:${ROOT_DIR}; \
-	export OS=${OS}; \
+	export REDIS_PORT=${REDIS_PORT}; \
+	export REDIS_SERVER=${REDIS_SERVER}; \
 	python3 -m pipenv check; \
 	python3 -m pipenv install --dev; \
 	python3 -m pipenv run python3 -m unittest;
+	@echo "${OK}"
+
+integration-test: venv
+	export PYTHONPATH=${PYTHONPATH}:${ROOT_DIR}; \
+	python3 -m pipenv check; \
+	python3 -m pipenv install --dev; \
+	python3 -m pipenv run python3 -m integtest;
 	@echo "${OK}"
 
 get_redis:
@@ -38,7 +46,9 @@ stop_redis:
 
 run: venv
 	@echo "Starting Flask Server"
-	export PYTHONPATH=${PYTHONPATH}:${ROOT_DIR}:REDIS_PORT=${REDIS_PORT}:REDIS_SERVER=${REDIS_SERVER}; \
+	export PYTHONPATH=${PYTHONPATH}:${ROOT_DIR}; \
+	export REDIS_PORT=${REDIS_PORT}; \
+	export REDIS_SERVER=${REDIS_SERVER}; \
 	python3 -m pipenv run flask run;
 	@echo "${OK}"
 
