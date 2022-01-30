@@ -1,6 +1,6 @@
 import unittest
 import pytest
-from redis_connect.connect import RedisConnect
+from redis_connect.connect import RedisConnect, URL_DESIGNATION
 
 TEST_KEY = ['cq3o0', 'asf24', '239fj2']
 TEST_VALUES = ["www.google.com", "www.turner.com", "www.blog.com/six"]
@@ -18,8 +18,8 @@ class TestConnectInteg(unittest.TestCase):
             cls.redis.delete(key)
 
     def test_connect_success(self):
-        self.redis.push(TEST_KEY[0], TEST_VALUES[0])
-        self.redis.push(TEST_KEY[1], TEST_VALUES[1])
+        self.redis._store_url(f"{URL_DESIGNATION}:{TEST_KEY[0]}", TEST_VALUES[0])
+        self.redis._store_url(f"{URL_DESIGNATION}:{TEST_KEY[1]}", TEST_VALUES[1])
 
         result = self.redis.get(TEST_KEY[0])
         self.assertEqual(TEST_VALUES[0], result)
